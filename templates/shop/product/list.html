@@ -1,0 +1,272 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    {% if category %}{{ category.name }}{% else %}Все товары{% endif %}
+{% endblock %}
+
+{% block content %}
+<div class="row">
+    <!-- Боковая панель с фильтрами -->
+    <div class="col-md-3">
+        <div class="card mb-4">
+            <div class="card-header bg-primary text-white">
+                <h5 class="mb-0"><i class="fas fa-filter"></i> Фильтры</h5>
+            </div>
+            <div class="card-body">
+                <form method="get" id="filter-form">
+                    <!-- Фильтр по цене -->
+                    <div class="mb-4">
+                        <label class="form-label fw-bold">Цена (₽)</label>
+
+                        <!-- Слайдер цены -->
+                        <div class="mb-3">
+                            <input type="range"
+                                   class="form-range"
+                                   id="priceSlider"
+                                   min="{{ price_min_global }}"
+                                   max="{{ price_max_global }}"
+                                   step="100"
+                                   value="{{ max_price|default:price_max_global }}">
+                            <div class="d-flex justify-content-between mt-2">
+                                <span id="sliderMin">{{ min_price|default:price_min_global }}</span>
+                                <span id="sliderMax">{{ max_price|default:price_max_global }}</span>
+                            </div>
+                        </div>
+
+                        <!-- Поля ввода цены -->
+                        <div class="row g-2">
+                            <div class="col-6">
+                                <div class="input-group input-group-sm">
+                                    <span class="input-group-text">от</span>
+                                    <input type="number"
+                                           name="min_price"
+                                           id="minPrice"
+                                           class="form-control"
+                                           placeholder="0"
+                                           value="{{ min_price|default:'' }}"
+                                           min="{{ price_min_global }}"
+                                           max="{{ price_max_global }}">
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="input-group input-group-sm">
+                                    <span class="input-group-text">до</span>
+                                    <input type="number"
+                                           name="max_price"
+                                           id="maxPrice"
+                                           class="form-control"
+                                           placeholder="{{ price_max_global }}"
+                                           value="{{ max_price|default:'' }}"
+                                           min="{{ price_min_global }}"
+                                           max="{{ price_max_global }}">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary w-100 mb-2">
+                        <i class="fas fa-search"></i> Применить
+                    </button>
+
+                    <a href="{% url 'shop:product_list' %}" class="btn btn-outline-secondary w-100">
+                        <i class="fas fa-undo-alt"></i> Сбросить все
+                    </a>
+                </form>
+            </div>
+        </div>
+
+        <!-- Информационный блок -->
+        <div class="card bg-light">
+            <div class="card-body">
+                <h6><i class="fas fa-info-circle"></i> Советы по поиску</h6>
+                <small class="text-muted">
+                    • Используйте ползунок для выбора цен<br>
+                    • Можно ввести значения вручную<br>
+                    • Цены обновляются автоматически
+                </small>
+            </div>
+        </div>
+    </div>
+
+    <!-- Основной контент с товарами -->
+    <div class="col-md-9">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h1>{% if category %}{{ category.name }}{% else %}Все товары{% endif %}</h1>
+            <div class="text-muted">
+                <i class="fas fa-tags"></i> Найдено: {{ products.paginator.count }} товаров
+            </div>
+        </div>
+
+        {% if products %}
+            <div class="row">
+                {% for product in products %}
+                    <div class="col-md-4 mb-4">
+                        <div class="card product-card h-100">
+                            {% if product.images.first %}
+                                <img src="{{ product.images.first.image.url }}" class="card-img-top product-img" alt="{{ product.name }}">
+                            {% else %}
+                                <div class="card-img-top product-img bg-light d-flex align-items-center justify-content-center">
+                                    <i class="fas fa-tshirt fa-3x text-muted"></i>
+                                </div>
+                            {% endif %}
+                            <div class="card-body">
+                                <h5 class="card-title">{{ product.name }}</h5>
+                                <p class="card-text text-muted">{{ product.description|truncatewords:10 }}</p>
+
+                                <!-- Рейтинг товара -->
+                                {% with reviews=product.reviews.all %}
+                                    {% if reviews %}
+                                        <div class="mb-2">
+                                            <div class="text-warning small">
+                                                {% with avg_rating=reviews|length %}
+                                                    {% for i in "12345"|make_list %}
+                                                        {% if forloop.counter <= avg_rating %}
+                                                            <i class="fas fa-star"></i>
+                                                        {% else %}
+                                                            <i class="far fa-star"></i>
+                                                        {% endif %}
+                                                    {% endfor %}
+                                                {% endwith %}
+                                                <span class="text-muted ms-1">({{ reviews.count }})</span>
+                                            </div>
+                                        </div>
+                                    {% endif %}
+                                {% endwith %}
+
+                                <div class="mb-2">
+                                    {% if product.discount_price %}
+                                        <span class="text-muted text-decoration-line-through">{{ product.price }} ₽</span>
+                                        <span class="text-danger fw-bold fs-5">{{ product.discount_price }} ₽</span>
+                                    {% else %}
+                                        <span class="fw-bold fs-5">{{ product.price }} ₽</span>
+                                    {% endif %}
+                                </div>
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <span class="badge bg-secondary">{{ product.sizes }}</span>
+                                    <span class="badge bg-info">{{ product.get_gender_display }}</span>
+                                </div>
+                            </div>
+                            <div class="card-footer bg-white">
+                                <div class="d-grid gap-2">
+                                    <a href="{{ product.get_absolute_url }}" class="btn btn-primary btn-sm">
+                                        <i class="fas fa-eye"></i> Подробнее
+                                    </a>
+                                    {% if user.is_authenticated %}
+                                        <a href="{% url 'shop:add_to_wishlist' product.id %}" class="btn btn-outline-danger btn-sm">
+                                            <i class="fas fa-heart"></i> В избранное
+                                        </a>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+
+            <!-- Пагинация с сохранением параметров фильтра -->
+            {% if products.has_other_pages %}
+            <nav aria-label="Page navigation" class="mt-4">
+                <ul class="pagination justify-content-center">
+                    {% if products.has_previous %}
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ products.previous_page_number }}{% if min_price %}&min_price={{ min_price }}{% endif %}{% if max_price %}&max_price={{ max_price }}{% endif %}">
+                                <i class="fas fa-chevron-left"></i> Назад
+                            </a>
+                        </li>
+                    {% endif %}
+
+                    {% for num in products.paginator.page_range %}
+                        <li class="page-item {% if products.number == num %}active{% endif %}">
+                            <a class="page-link" href="?page={{ num }}{% if min_price %}&min_price={{ min_price }}{% endif %}{% if max_price %}&max_price={{ max_price }}{% endif %}">
+                                {{ num }}
+                            </a>
+                        </li>
+                    {% endfor %}
+
+                    {% if products.has_next %}
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ products.next_page_number }}{% if min_price %}&min_price={{ min_price }}{% endif %}{% if max_price %}&max_price={{ max_price }}{% endif %}">
+                                Вперед <i class="fas fa-chevron-right"></i>
+                            </a>
+                        </li>
+                    {% endif %}
+                </ul>
+            </nav>
+            {% endif %}
+        {% else %}
+            <div class="col-12">
+                <div class="alert alert-info text-center">
+                    <i class="fas fa-info-circle fa-2x mb-3"></i>
+                    <h4>Товары не найдены</h4>
+                    <p>Попробуйте изменить параметры фильтрации</p>
+                    <a href="{% url 'shop:product_list' %}" class="btn btn-primary">
+                        <i class="fas fa-undo-alt"></i> Сбросить фильтры
+                    </a>
+                </div>
+            </div>
+        {% endif %}
+    </div>
+</div>
+
+<!-- JavaScript для слайдера -->
+<script>
+    // Синхронизация слайдера с полями ввода
+    const priceSlider = document.getElementById('priceSlider');
+    const minPriceInput = document.getElementById('minPrice');
+    const maxPriceInput = document.getElementById('maxPrice');
+    const sliderMin = document.getElementById('sliderMin');
+    const sliderMax = document.getElementById('sliderMax');
+
+    if (priceSlider) {
+        // Устанавливаем начальные значения
+        const currentMin = parseInt({{ min_price|default:price_min_global }}) || {{ price_min_global }};
+        const currentMax = parseInt({{ max_price|default:price_max_global }}) || {{ price_max_global }};
+
+        priceSlider.min = {{ price_min_global }};
+        priceSlider.max = {{ price_max_global }};
+        priceSlider.value = currentMax;
+
+        // Обновляем отображение
+        sliderMin.textContent = currentMin;
+        sliderMax.textContent = currentMax;
+
+        // Обработчик изменения слайдера
+        priceSlider.addEventListener('input', function() {
+            const maxVal = parseInt(this.value);
+            sliderMax.textContent = maxVal;
+            maxPriceInput.value = maxVal;
+
+            // Если минимальное значение больше максимального, корректируем
+            let minVal = parseInt(minPriceInput.value) || {{ price_min_global }};
+            if (minVal > maxVal) {
+                minPriceInput.value = maxVal;
+                sliderMin.textContent = maxVal;
+            }
+        });
+
+        // Обработчики для полей ввода
+        minPriceInput.addEventListener('change', function() {
+            let val = parseInt(this.value) || {{ price_min_global }};
+            const maxVal = parseInt(maxPriceInput.value) || {{ price_max_global }};
+
+            if (val < {{ price_min_global }}) val = {{ price_min_global }};
+            if (val > maxVal) val = maxVal;
+
+            this.value = val;
+            sliderMin.textContent = val;
+        });
+
+        maxPriceInput.addEventListener('change', function() {
+            let val = parseInt(this.value) || {{ price_max_global }};
+            const minVal = parseInt(minPriceInput.value) || {{ price_min_global }};
+
+            if (val > {{ price_max_global }}) val = {{ price_max_global }};
+            if (val < minVal) val = minVal;
+
+            this.value = val;
+            sliderMax.textContent = val;
+            priceSlider.value = val;
+        });
+    }
+</script>
+{% endblock %}
