@@ -8,10 +8,11 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = config('SECRET_KEY')
 
 # Берем DEBUG из .env
-DEBUG = config('DEBUG', default=False, cast=bool)
+DEBUG = True
+
 
 # Берем ALLOWED_HOSTS из .env
-ALLOWED_HOSTS = config('ALLOWED_HOSTS', default='127.0.0.1,localhost', cast=lambda v: [s.strip() for s in v.split(',')])
+ALLOWED_HOSTS = ['*']
 
 # Добавьте все приложения
 INSTALLED_APPS = [
