@@ -10,9 +10,10 @@ SECRET_KEY = config('SECRET_KEY')
 # Берем DEBUG из .env
 DEBUG = True
 
-
 # Берем ALLOWED_HOSTS из .env
 ALLOWED_HOSTS = ['*']
+
+CSRF_TRUSTED_ORIGINS = ['https://helen-shop.onrender.com']
 
 # Добавьте все приложения
 INSTALLED_APPS = [
@@ -22,11 +23,18 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.sites',  # Добавлено для allauth
     'shop',
     'cart',
     'orders',
     'accounts',
+    # allauth приложения
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
+    'allauth.socialaccount.providers.telegram',  # Провайдер Telegram
 ]
+
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -35,7 +43,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    #'debug_toolbar.middleware.DebugToolbarMiddleware',  # для отладки
+    'allauth.account.middleware.AccountMiddleware',  # Добавлено для allauth
 ]
 
 ROOT_URLCONF = 'clothing_store.urls'
@@ -55,7 +63,7 @@ TEMPLATES = [
                 'django.contrib.messages.context_processors.messages',
                 'shop.context_processors.categories',
                 'cart.context_processors.cart',
-                'shop.context_processors.wishlist_count',# Добавьте эту строку
+                'shop.context_processors.wishlist_count',
             ],
         },
     },
@@ -102,9 +110,41 @@ INTERNAL_IPS = [
     '127.0.0.1',
 ]
 
+# Настройки аутентификации
 LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = '/'
 LOGIN_URL = 'login'
+
+# Настройки allauth
+SITE_ID = 1
+AUTHENTICATION_BACKENDS = [
+    'django.contrib.auth.backends.ModelBackend',  # стандартный бэкенд Django
+    'allauth.account.auth_backends.AuthenticationBackend',  # бэкенд allauth
+]
+
+# Настройки аккаунтов allauth
+ACCOUNT_EMAIL_REQUIRED = False  # Email не обязателен
+ACCOUNT_EMAIL_VERIFICATION = 'none'  # Без подтверждения email
+ACCOUNT_AUTHENTICATION_METHOD = 'username'  # Авторизация по username
+ACCOUNT_USERNAME_REQUIRED = True
+ACCOUNT_LOGOUT_ON_GET = True  # Выход при GET запросе
+
+# Настройки социальной аутентификации
+SOCIALACCOUNT_LOGIN_ON_GET = True
+SOCIALACCOUNT_AUTO_SIGNUP = True
+SOCIALACCOUNT_EMAIL_REQUIRED = False
+SOCIALACCOUNT_STORE_TOKENS = False
+
+# Админка
 ADMIN_SITE_HEADER = "HelenShop Администрирование"
 ADMIN_SITE_TITLE = "HelenShop"
 ADMIN_INDEX_TITLE = "Управление магазином HelenShop"
+
+
+
+
+
+
+
+
+
