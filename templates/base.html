@@ -24,8 +24,6 @@
             padding: 20px 0;
             background-color: #f8f9fa;
         }
-
-        /* Стили для слайдера цены */
         .form-range {
             width: 100%;
             height: 6px;
@@ -35,7 +33,6 @@
             outline: none;
             cursor: pointer;
         }
-
         .form-range::-webkit-slider-thumb {
             -webkit-appearance: none;
             width: 18px;
@@ -47,43 +44,29 @@
             cursor: pointer;
             transition: transform 0.2s;
         }
-
         .form-range::-webkit-slider-thumb:hover {
             transform: scale(1.2);
         }
-
-        /* Стили для карточек товаров */
         .card {
             transition: all 0.3s ease;
         }
-
-        /* Анимация для кнопок */
         .btn {
             transition: all 0.2s ease;
         }
-
         .btn:hover {
             transform: translateY(-2px);
         }
-
-        /* Стили для фильтров */
         .card-header {
             font-weight: bold;
             border-bottom: none;
         }
-
-        /* Стили для количества товаров */
         .badge {
             font-size: 0.8rem;
             padding: 0.35em 0.65em;
         }
-
-        /* Стили для рейтинга */
         .text-warning {
             color: #ffc107 !important;
         }
-
-        /* Адаптивность для мобильных устройств */
         @media (max-width: 768px) {
             .product-img {
                 height: 200px;
@@ -92,21 +75,16 @@
                 font-size: 1.2rem;
             }
         }
-
-        /* Стили для активной пагинации */
         .page-item.active .page-link {
             background-color: #0d6efd;
             border-color: #0d6efd;
         }
-
-        /* Стили для информационного блока */
         .bg-light {
             background-color: #f8f9fa !important;
         }
     </style>
 </head>
 <body>
-    <!-- Навигация -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
         <div class="container">
             <a class="navbar-brand" href="{% url 'shop:product_list' %}">
@@ -151,20 +129,27 @@
                                 <i class="fas fa-user"></i> {{ user.username }}
                             </a>
                             <ul class="dropdown-menu">
-                                <li><a class="dropdown-item" href="{% url 'orders:order_list' %}">
-                                    <i class="fas fa-list"></i> Мои заказы
-                                </a></li>
+                                <li><a class="dropdown-item" href="{% url 'orders:order_list' %}">Мои заказы</a></li>
+                                <li><a class="dropdown-item" href="{% url 'shop:wishlist_detail' %}">Избранное</a></li>
                                 <li><hr class="dropdown-divider"></li>
-                                <li><a class="dropdown-item" href="{% url 'admin:index' %}">
-                                    <i class="fas fa-cog"></i> Админка
-                                </a></li>
+                                <li><a class="dropdown-item" href="{% url 'admin:index' %}">Админка</a></li>
+                                <li><a class="dropdown-item" href="{% url 'account_logout' %}">Выйти</a></li>
                             </ul>
                         </li>
                     {% else %}
-                        <li class="nav-item">
-                            <a class="nav-link" href="{% url 'admin:index' %}">
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="loginDropdown" role="button" data-bs-toggle="dropdown">
                                 <i class="fas fa-sign-in-alt"></i> Войти
                             </a>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" href="{% url 'admin:index' %}">
+                                    <i class="fas fa-user-lock"></i> Админ-панель
+                                </a></li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li><a class="dropdown-item" href="{% provider_login_url 'telegram' method='oauth2' %}">
+                                    <i class="fab fa-telegram"></i> Войти через Telegram
+                                </a></li>
+                            </ul>
                         </li>
                     {% endif %}
                 </ul>
@@ -172,13 +157,11 @@
         </div>
     </nav>
 
-    <!-- Контент -->
     <main class="container mt-4">
         {% block content %}
         {% endblock %}
     </main>
 
-    <!-- Футер -->
     <footer class="text-center mt-5">
         <div class="container">
             <p>&copy; 2024 HelenShop. Все права защищены.</p>
@@ -190,9 +173,7 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-        // Дополнительный JavaScript для улучшения взаимодействия
         document.addEventListener('DOMContentLoaded', function() {
-            // Автоматическое скрытие сообщений через 5 секунд
             const alerts = document.querySelectorAll('.alert');
             alerts.forEach(function(alert) {
                 setTimeout(function() {
@@ -203,8 +184,6 @@
                     }, 500);
                 }, 5000);
             });
-
-            // Добавляем класс для активной ссылки в навигации
             const currentUrl = window.location.pathname;
             const navLinks = document.querySelectorAll('.navbar-nav .nav-link');
             navLinks.forEach(function(link) {
