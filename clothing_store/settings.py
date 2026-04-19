@@ -1,42 +1,6 @@
 import os
 from pathlib import Path
 from decouple import config
-from django.apps import apps
-from django.contrib.sites.models import Site
-from allauth.socialaccount.models import SocialApp
-
-
-
-def create_telegram_social_app():
-    try:
-        # Получаем или создаем сайт
-        current_site, _ = Site.objects.get_or_create(
-            domain='helen-shop.onrender.com',
-            defaults={'name': 'HelenShop'}
-        )
-
-        # Создаем или обновляем приложение Telegram
-        app, created = SocialApp.objects.get_or_create(
-            provider='telegram',
-            name='Telegram',
-            defaults={
-                'client_id': '84014347464:AAGxcITa9m8-veQR_wKnKM1koYRTXG0kfA',
-            }
-        )
-        # Привязываем сайт к приложению
-        app.sites.add(current_site)
-        app.save()
-    except Exception as e:
-        print(f"Telegram app setup error: {e}")
-
-
-# ВАЖНО: Функция вызывается здесь.
-# Это самый надежный способ на Render.
-create_telegram_social_app()
-
-
-
-
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -44,9 +8,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = config('SECRET_KEY')
 
 # Берем DEBUG из .env
-
 DEBUG = config('DEBUG', default=False, cast=bool)
-
 
 # Берем ALLOWED_HOSTS из .env
 ALLOWED_HOSTS = ['*']
