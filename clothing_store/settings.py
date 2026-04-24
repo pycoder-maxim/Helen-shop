@@ -96,11 +96,20 @@ TIME_ZONE = 'Europe/Moscow'
 USE_I18N = True
 USE_TZ = True
 
-STATIC_URL = 'static/'
-STATICFILES_DIRS = [BASE_DIR / 'static']
+# ======================================
+# НАСТРОЙКИ СТАТИЧЕСКИХ ФАЙЛОВ
+# ======================================
+# Это самое важное исправление для админки
+STATIC_URL = '/static/'
+
+# Папка, куда будут собираться все статические файлы (CSS, JS) для работы сайта
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 
-MEDIA_URL = 'media/'
+# Папка, где ты можешь хранить свои собственные CSS/JS файлы (например, для стилей магазина)
+STATICFILES_DIRS = [BASE_DIR / 'static']
+
+# Настройки для загружаемых пользователем картинок (медиафайлов)
+MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
@@ -115,46 +124,47 @@ LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = '/'
 LOGIN_URL = 'login'
 
-# Настройки allauth
+# ======================================
+# НАСТРОЙКИ ALLAUTH
+# ======================================
 SITE_ID = 1
 AUTHENTICATION_BACKENDS = [
-    'django.contrib.auth.backends.ModelBackend',  # стандартный бэкенд Django
-    'allauth.account.auth_backends.AuthenticationBackend',  # бэкенд allauth
+    'django.contrib.auth.backends.ModelBackend',
+    'allauth.account.auth_backends.AuthenticationBackend',
 ]
 
-# Настройки аккаунтов allauth
-ACCOUNT_EMAIL_REQUIRED = False  # Email не обязателен
-ACCOUNT_EMAIL_VERIFICATION = 'none'  # Без подтверждения email
-ACCOUNT_AUTHENTICATION_METHOD = 'username'  # Авторизация по username
-ACCOUNT_USERNAME_REQUIRED = True
-ACCOUNT_LOGOUT_ON_GET = True  # Выход при GET запросе
+# Современные настройки allauth, которые уберут предупреждения
+# Вместо старых ACCOUNT_EMAIL_REQUIRED, ACCOUNT_USERNAME_REQUIRED и т.д.
+ACCOUNT_LOGIN_METHODS = {'username'}
+ACCOUNT_SIGNUP_FIELDS = ['email*', 'username*', 'password1*', 'password2*']
+ACCOUNT_EMAIL_VERIFICATION = 'none'
+ACCOUNT_LOGOUT_ON_GET = True
 
-# Настройки социальной аутентификации
 SOCIALACCOUNT_LOGIN_ON_GET = True
 SOCIALACCOUNT_AUTO_SIGNUP = True
 SOCIALACCOUNT_EMAIL_REQUIRED = False
 SOCIALACCOUNT_STORE_TOKENS = False
 
-# Админка
+
+# ======================================
+# КАСТОМИЗАЦИЯ АДМИНКИ
+# ======================================
 ADMIN_SITE_HEADER = "HelenShop Администрирование"
 ADMIN_SITE_TITLE = "HelenShop"
 ADMIN_INDEX_TITLE = "Управление магазином HelenShop"
 
-# ==============================================
+# ======================================
 # АВТОМАТИЧЕСКОЕ СОЗДАНИЕ TELEGRAM ПРИЛОЖЕНИЯ
-# ==============================================
-# Этот код создаст Social App для Telegram при каждом запуске, если его нет
+# ======================================
 try:
     from django.contrib.sites.models import Site
     from allauth.socialaccount.models import SocialApp
 
-    # Создаем или получаем сайт
     current_site, _ = Site.objects.get_or_create(
         domain='helen-shop.onrender.com',
         defaults={'name': 'HelenShop'}
     )
 
-    # Создаем или получаем приложение Telegram
     telegram_app, created = SocialApp.objects.get_or_create(
         provider='telegram',
         name='Telegram',
@@ -163,14 +173,12 @@ try:
         }
     )
 
-    # Привязываем сайт к приложению
     if current_site not in telegram_app.sites.all():
         telegram_app.sites.add(current_site)
         telegram_app.save()
 
 except Exception as e:
-    # Игнорируем ошибки при запуске (например, во время миграций)
-    pass
+    print(f"Telegram app setup error (non-critical): {e}")
 
 
 
