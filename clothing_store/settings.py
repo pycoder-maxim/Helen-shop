@@ -14,6 +14,13 @@ DEBUG = config('DEBUG', default=False, cast=bool)
 ALLOWED_HOSTS = ['*']
 
 CSRF_TRUSTED_ORIGINS = ['https://helen-shop.onrender.com', 'http://helen-shop.onrender.com']
+CLOUDINARY_STORAGE = {
+    'CLOUD_NAME': 'doodyjkgq',
+    'API_KEY': '463822633568354',
+    'API_SECRET': 'shSCwQpuEIzqM_1gj3ByMVGbKPY',
+}
+DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
+
 
 # Добавьте все приложения
 INSTALLED_APPS = [
@@ -23,6 +30,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'cloudinary',
+    'cloudinary_storage',
     'django.contrib.sites',  # Добавлено для allauth
     'shop',
     'cart',
