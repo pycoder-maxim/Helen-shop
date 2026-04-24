@@ -28,8 +28,27 @@
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'cart:cart_detail' %}">
                             <i class="fas fa-shopping-cart"></i> Корзина
+                            {% if cart %}
+                                <span class="badge bg-danger rounded-pill">{{ cart|length }}</span>
+                            {% endif %}
                         </a>
                     </li>
+                    {% if user.is_authenticated %}
+                        <li class="nav-item">
+                            <span class="nav-link"><i class="fas fa-user"></i> {{ user.username }}</span>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'admin:logout' %}">
+                                <i class="fas fa-sign-out-alt"></i> Выйти
+                            </a>
+                        </li>
+                    {% else %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'admin:login' %}">
+                                <i class="fas fa-sign-in-alt"></i> Войти
+                            </a>
+                        </li>
+                    {% endif %}
                 </ul>
             </div>
         </div>
