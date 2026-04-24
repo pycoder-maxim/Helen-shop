@@ -35,7 +35,9 @@ INSTALLED_APPS = [
     'allauth.socialaccount.providers.telegram',  # Провайдер Telegram
 ]
 
+
 MIDDLEWARE = [
+    'whitenoise.middleware.WhiteNoiseMiddleware',  # ← добавь ЭТУ строку ПЕРВОЙ
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -43,7 +45,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'allauth.account.middleware.AccountMiddleware',  # Добавлено для allauth
+    'allauth.account.middleware.AccountMiddleware',
 ]
 
 ROOT_URLCONF = 'clothing_store.urls'
@@ -108,9 +110,12 @@ STATIC_ROOT = BASE_DIR / 'staticfiles'
 # Папка, где ты можешь хранить свои собственные CSS/JS файлы (например, для стилей магазина)
 STATICFILES_DIRS = [BASE_DIR / 'static']
 
+
 # Настройки для загружаемых пользователем картинок (медиафайлов)
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
+
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
