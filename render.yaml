@@ -1,3 +1,4 @@
+
 services:
   - type: web
     name: helen-shop
@@ -9,3 +10,7 @@ services:
         value: helen-shop.onrender.com
       - key: DEBUG
         value: 'False'
+    disk:
+      name: helen-shop-media
+      mountPath: /opt/render/project/src/media
+      sizeGB: 1
