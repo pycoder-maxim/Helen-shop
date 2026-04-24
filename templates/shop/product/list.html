@@ -1,3 +1,4 @@
+
 {% extends 'base.html' %}
 
 {% block title %}
@@ -102,10 +103,11 @@
                 {% for product in products %}
                     <div class="col-md-4 mb-4">
                         <div class="card product-card h-100">
+                            <!-- Блок с изображением товара -->
                             {% if product.images.first %}
-                                <img src="{{ product.images.first.image.url }}" class="card-img-top product-img" alt="{{ product.name }}">
+                                <img src="{{ product.images.first.image.url }}" class="card-img-top product-img" alt="{{ product.name }}" style="height: 200px; object-fit: cover;">
                             {% else %}
-                                <div class="card-img-top product-img bg-light d-flex align-items-center justify-content-center">
+                                <div class="card-img-top product-img bg-light d-flex align-items-center justify-content-center" style="height: 200px;">
                                     <i class="fas fa-tshirt fa-3x text-muted"></i>
                                 </div>
                             {% endif %}
