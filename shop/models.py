@@ -68,9 +68,11 @@ class Product(models.Model):
 
 
 class ProductImage(models.Model):
+    """Изображения товаров с поддержкой ссылок (URL)"""
     product = models.ForeignKey(Product, on_delete=models.CASCADE,
                                 related_name='images', verbose_name='Товар')
-    image = models.ImageField('Изображение', upload_to='products/')
+    # Используем URLField вместо ImageField — можно вставлять ссылки из интернета
+    image = models.URLField('Ссылка на изображение', max_length=500, blank=True, null=True)
     is_main = models.BooleanField('Основное изображение', default=False)
 
     class Meta:
@@ -106,26 +108,9 @@ class Wishlist(models.Model):
     class Meta:
         verbose_name = 'Избранное'
         verbose_name_plural = 'Избранное'
-        unique_together = ('user', 'product')  # Чтобы товар не добавлялся дважды
+        unique_together = ('user', 'product')
 
     def __str__(self):
         return f"{self.user.username} - {self.product.name}"
-
-
-class Review(models.Model):
-    product = models.ForeignKey(Product, on_delete=models.CASCADE,
-                                related_name='reviews', verbose_name='Товар')
-    user = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name='Пользователь')
-    rating = models.PositiveSmallIntegerField('Оценка', choices=[(i, i) for i in range(1, 6)])
-    comment = models.TextField('Комментарий')
-    created = models.DateTimeField('Создан', auto_now_add=True)
-
-    class Meta:
-        verbose_name = 'Отзыв'
-        verbose_name_plural = 'Отзывы'
-        ordering = ['-created']
-
-    def __str__(self):
-        return f"Отзыв от {self.user.username} на {self.product.name}"
 
 
