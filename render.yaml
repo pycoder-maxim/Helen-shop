@@ -14,3 +14,5 @@ services:
       name: helen-shop-media
       mountPath: /opt/render/project/src/media
       sizeGB: 1
+
+
