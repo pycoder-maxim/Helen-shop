@@ -144,20 +144,21 @@ SOCIALACCOUNT_EMAIL_REQUIRED = False
 SOCIALACCOUNT_STORE_TOKENS = False
 
 # ======================================
-# НАСТРОЙКИ TELEGRAM ПРОВАЙДЕРА
+# НАСТРОЙКИ TELEGRAM ПРОВАЙДЕРА (ОТКЛЮЧЕНО)
 # ======================================
-SOCIALACCOUNT_PROVIDERS = {
-    'telegram': {
-        'APP': {
-            'client_id': '84014347464',  # ТОЛЬКО число (ID бота)
-            'secret': '84014347464:AAGxcITa9m8-veQR_wKnKM1koYRTXG0kfA',  # ПОЛНЫЙ токен
-        },
-        'AUTH_PARAMS': {
-            'bot_id': '84014347464',
-            'request_access': 'write',
-        },
-    }
-}
+# Используем только ручную настройку через админку
+# SOCIALACCOUNT_PROVIDERS = {
+#     'telegram': {
+#         'APP': {
+#             'client_id': '84014347464',
+#             'secret': '84014347464:AAGxcITa9m8-veQR_wKnKM1koYRTXG0kfA',
+#         },
+#         'AUTH_PARAMS': {
+#             'bot_id': '84014347464',
+#             'request_access': 'write',
+#         },
+#     }
+# }
 
 # ======================================
 # КАСТОМИЗАЦИЯ АДМИНКИ
