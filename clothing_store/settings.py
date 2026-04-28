@@ -167,7 +167,17 @@ ADMIN_SITE_HEADER = "HelenShop Администрирование"
 ADMIN_SITE_TITLE = "HelenShop"
 ADMIN_INDEX_TITLE = "Управление магазином HelenShop"
 
-
+SOCIALACCOUNT_PROVIDERS = {
+    'telegram': {
+        'APP': {
+            'client_id': '84014347464',  # ТОЛЬКО число (ID бота)
+            'secret': '84014347464:AAGxcITa9m8-veQR_wKnKM1koYRTXG0kfA',  # ПОЛНЫЙ токен
+        },
+        'AUTH_PARAMS': {
+            'auth_date_validity': 30,
+        },
+    }
+}
 
 
 
