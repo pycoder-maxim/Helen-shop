@@ -166,34 +166,6 @@ ADMIN_SITE_HEADER = "HelenShop Администрирование"
 ADMIN_SITE_TITLE = "HelenShop"
 ADMIN_INDEX_TITLE = "Управление магазином HelenShop"
 
-# ======================================
-# АВТОМАТИЧЕСКОЕ СОЗДАНИЕ TELEGRAM ПРИЛОЖЕНИЯ (ОТКЛЮЧЕНО)
-# ======================================
-# Закомментировано, чтобы не создавать дубликат Social App
-# try:
-#     from django.contrib.sites.models import Site
-#     from allauth.socialaccount.models import SocialApp
-#
-#     current_site, _ = Site.objects.get_or_create(
-#         domain='helen-shop.onrender.com',
-#         defaults={'name': 'HelenShop'}
-#     )
-#
-#     telegram_app, created = SocialApp.objects.get_or_create(
-#         provider='telegram',
-#         name='Telegram',
-#         defaults={
-#             'client_id': '84014347464:AAGxcITa9m8-veQR_wKnKM1koYRTXG0kfA',
-#         }
-#     )
-#
-#     if current_site not in telegram_app.sites.all():
-#         telegram_app.sites.add(current_site)
-#         telegram_app.save()
-#
-# except Exception as e:
-#     print(f"Telegram app setup error (non-critical): {e}")
-
 
 
 
