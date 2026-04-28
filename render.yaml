@@ -1,16 +1,6 @@
-
 services:
   - type: web
     name: helen-shop
     runtime: python
-    buildCommand: pip install -r requirements.txt && python manage.py migrate && python manage.py collectstatic --noinput
-    startCommand: gunicorn clothing_store.wsgi:application
-    envVars:
-      - key: DJANGO_ALLOWED_HOSTS
-        value: helen-shop.onrender.com
-      - key: DEBUG
-        value: 'False'
-    disk:
-      name: helen-shop-media
-      mountPath: /opt/render/project/src/media
-      sizeGB: 1
+    buildCommand: echo "Skip build"
+    startCommand: python manage.py runserver 0.0.0.0:8000
