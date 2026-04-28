@@ -101,15 +101,9 @@ USE_TZ = True
 # ======================================
 # НАСТРОЙКИ СТАТИЧЕСКИХ ФАЙЛОВ
 # ======================================
-# Это самое важное исправление для админки
 STATIC_URL = '/static/'
-
-# Папка, куда будут собираться все статические файлы (CSS, JS) для работы сайта
 STATIC_ROOT = BASE_DIR / 'staticfiles'
-
-# Папка, где ты можешь хранить свои собственные CSS/JS файлы (например, для стилей магазина)
 STATICFILES_DIRS = [BASE_DIR / 'static']
-
 
 # Настройки для загружаемых пользователем картинок (медиафайлов)
 MEDIA_URL = '/media/'
@@ -138,8 +132,7 @@ AUTHENTICATION_BACKENDS = [
     'allauth.account.auth_backends.AuthenticationBackend',
 ]
 
-# Современные настройки allauth, которые уберут предупреждения
-# Вместо старых ACCOUNT_EMAIL_REQUIRED, ACCOUNT_USERNAME_REQUIRED и т.д.
+# Современные настройки allauth
 ACCOUNT_LOGIN_METHODS = {'username'}
 ACCOUNT_SIGNUP_FIELDS = ['email*', 'username*', 'password1*', 'password2*']
 ACCOUNT_EMAIL_VERIFICATION = 'none'
@@ -150,6 +143,17 @@ SOCIALACCOUNT_AUTO_SIGNUP = True
 SOCIALACCOUNT_EMAIL_REQUIRED = False
 SOCIALACCOUNT_STORE_TOKENS = False
 
+# ======================================
+# НАСТРОЙКИ TELEGRAM ПРОВАЙДЕРА
+# ======================================
+SOCIALACCOUNT_PROVIDERS = {
+    'telegram': {
+        'APP': {
+            'client_id': '84014347464',  # ТОЛЬКО ЧИСЛО (ID бота)
+            'secret': '84014347464:AAGxcITa9m8-veQR_wKnKM1koYRTXG0kfA',  # ПОЛНЫЙ ТОКЕН
+        }
+    }
+}
 
 # ======================================
 # КАСТОМИЗАЦИЯ АДМИНКИ
