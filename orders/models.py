@@ -31,7 +31,9 @@ class Order(models.Model):
     updated = models.DateTimeField('Обновлен', auto_now=True)
     status = models.CharField('Статус', max_length=20, choices=STATUS_CHOICES, default='pending')
     payment_method = models.CharField('Способ оплаты', max_length=20, choices=PAYMENT_CHOICES, default='cash')
-    paid = models.BooleanField('Оплачен', default=False)
+    # Убери поле paid, оставь только is_paid
+    is_paid = models.BooleanField('Оплачен', default=False)
+    paid_at = models.DateTimeField('Дата оплаты', null=True, blank=True)
 
     class Meta:
         verbose_name = 'Заказ'
